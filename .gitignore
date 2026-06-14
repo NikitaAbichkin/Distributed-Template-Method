@@ -4,7 +4,7 @@
 /build/
 
 # Настройки IDE ( IntelliJ IDEA, Eclipse, NetBeans)
-/.idea/
+.idea/
 /*.mvn
 /*.iml
 /*.iws
