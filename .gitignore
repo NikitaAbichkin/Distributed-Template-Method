@@ -1,0 +1,23 @@
+# Сборочные директории (весь компилируемый код и тяжелые артефакты)
+/target/
+/out/
+/build/
+
+# Настройки IDE ( IntelliJ IDEA, Eclipse, NetBeans)
+/.idea/
+/*.mvn
+/*.iml
+/*.iws
+/*.ipr
+/.settings/
+/.classpath
+/.project
+
+# Логи работы приложения и кэш
+*.log
+/logs/
+.gradle/
+
+# Системные файлы операционных систем
+.DS_Store
+Thumbs.db

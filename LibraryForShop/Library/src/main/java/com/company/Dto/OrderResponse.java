@@ -1,0 +1,18 @@
+package com.company.Dto;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+public class OrderResponse {
+    Long id;
+    String name;
+    Integer cost;
+    Integer quantity;
+    String status;
+}

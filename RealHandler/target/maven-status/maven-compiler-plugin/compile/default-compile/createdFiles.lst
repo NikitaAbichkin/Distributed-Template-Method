@@ -1,0 +1,4 @@
+com/company/Model/Order.class
+com/company/Service/OrderServicesRealization.class
+com/company/Configuration/ConfigurationKafka.class
+com/company/Repository/OrderRepository.class
