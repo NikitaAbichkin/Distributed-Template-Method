@@ -2,7 +2,7 @@
 /target/
 /out/
 /build/
-
+target/
 # Настройки IDE ( IntelliJ IDEA, Eclipse, NetBeans)
 .idea/
 /*.mvn
@@ -12,7 +12,7 @@
 /.settings/
 /.classpath
 /.project
-
+.vscode/
 # Логи работы приложения и кэш
 *.log
 /logs/
