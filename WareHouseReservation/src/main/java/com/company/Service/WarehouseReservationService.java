@@ -27,6 +27,7 @@ public class WarehouseReservationService {
         warehouseReservation.setQuantity(event.quantity());
         warehouseReservation.setStatus(event.status());
         warehouseReservationRepository.save(warehouseReservation);
+
     }
     
     @KafkaListener(topics = "Deleting-order-topic", groupId = "OrderReservation")

@@ -1,4 +1,10 @@
 package com.company.Repository;
 
-public interface OutboxEventRepository extends org.springframework.data.jpa.repository.JpaRepository<com.company.Model.OutboxEvent, java.lang.Long> {
+import com.company.Model.OutboxEvent;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.util.List;
+
+public interface OutboxEventRepository extends JpaRepository<OutboxEvent, Long> {
+    List<OutboxEvent> findTopByStatusOrderByEventId(String status);
 }

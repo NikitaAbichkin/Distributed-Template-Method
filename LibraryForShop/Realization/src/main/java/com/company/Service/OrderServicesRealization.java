@@ -6,6 +6,8 @@ import com.company.Dto.OrderUpdatingRequest;
 import com.company.Model.Order;
 import com.company.Repository.OrderRepository;
 import com.company.OrderServiceInterface;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
@@ -13,14 +15,18 @@ import org.springframework.stereotype.Service;
 public class OrderServicesRealization implements OrderServiceInterface {
     private final KafkaTemplate<String, Object> kafkaTemplate;
     private final OrderRepository orderRepository;
+    private  final  ObjectMapper objectMapper;
+    private  final  OutBoxService outBoxService;
 
-    public OrderServicesRealization(KafkaTemplate<String, Object> kafkaTemplate, OrderRepository orderRepository) {
+    public OrderServicesRealization(KafkaTemplate<String, Object> kafkaTemplate, OrderRepository orderRepository, ObjectMapper objectMapper, OutBoxService outBoxService) {
         this.kafkaTemplate = kafkaTemplate;
         this.orderRepository = orderRepository;
+        this.objectMapper = objectMapper;
+        this.outBoxService = outBoxService;
     }
 
     @Override
-    public OrderCreatedEvent createOrder(OrderRequest request) {
+    public OrderCreatedEvent createOrder(OrderRequest request) throws JsonProcessingException {
         Order order = fromRequsetToEntity(request);
         order = orderRepository.save(order);
 
@@ -31,7 +37,12 @@ public class OrderServicesRealization implements OrderServiceInterface {
                 order.getCost(),
                 order.getStatus());
 
-        kafkaTemplate.send("Creating-or-Updating-order-topic", event);
+        // пайлоад в виде джсона
+        String payload = objectMapper.writeValueAsString(event);
+
+        // сохраняем событие
+        outBoxService.SaveEvent("Creating-or-Updating-order-topic","CreatingOrder", payload);
+
         return  event;
     }
 
