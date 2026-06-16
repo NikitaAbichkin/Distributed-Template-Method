@@ -13,13 +13,11 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class OrderServicesRealization implements OrderServiceInterface {
-    private final KafkaTemplate<String, Object> kafkaTemplate;
     private final OrderRepository orderRepository;
     private  final  ObjectMapper objectMapper;
     private  final  OutBoxService outBoxService;
 
-    public OrderServicesRealization(KafkaTemplate<String, Object> kafkaTemplate, OrderRepository orderRepository, ObjectMapper objectMapper, OutBoxService outBoxService) {
-        this.kafkaTemplate = kafkaTemplate;
+    public OrderServicesRealization(OrderRepository orderRepository, ObjectMapper objectMapper, OutBoxService outBoxService) {
         this.orderRepository = orderRepository;
         this.objectMapper = objectMapper;
         this.outBoxService = outBoxService;
@@ -41,13 +39,13 @@ public class OrderServicesRealization implements OrderServiceInterface {
         String payload = objectMapper.writeValueAsString(event);
 
         // сохраняем событие
-        outBoxService.SaveEvent("Creating-or-Updating-order-topic","CreatingOrder", payload);
+        outBoxService.SaveEvent("CreatingOrder-topic","CreatingOrder", payload);
 
         return  event;
     }
 
     @Override
-    public String deleteOrder(Long id) {
+    public String deleteOrder(Long id) throws JsonProcessingException {
         Order order = orderRepository.findById(id).orElseThrow();
         orderRepository.deleteById(id);
         OrderCreatedEvent event = new OrderCreatedEvent(
@@ -56,13 +54,15 @@ public class OrderServicesRealization implements OrderServiceInterface {
                 order.getQuantity(),
                 order.getCost(),
                 order.getStatus());
+                
         
-        kafkaTemplate.send("Deleting-order-topic", event);
+            String payload = objectMapper.writeValueAsString(event);
+            outBoxService.SaveEvent("Deleting-order-topic", "deletingOrder", payload);
         return "Order with id: "+ order.getId()+" was deleted";
     }
 
     @Override
-    public OrderCreatedEvent updateOrder(OrderUpdatingRequest orderRequest) {
+    public OrderCreatedEvent updateOrder(OrderUpdatingRequest orderRequest) throws JsonProcessingException {
         Order order = fromOrderUpdatingRequesttoOrder(orderRequest);
         order = orderRepository.save(order);
         OrderCreatedEvent event = new OrderCreatedEvent(
@@ -71,7 +71,11 @@ public class OrderServicesRealization implements OrderServiceInterface {
                 order.getQuantity(),
                 order.getCost(),
                 order.getStatus());
-        kafkaTemplate.send("Creating-or-Updating-order-topic", event);
+        String payload = objectMapper.writeValueAsString(event);
+        // сохраняем событие
+        outBoxService.SaveEvent("UpdatingOrder-topic","UpdatingOrder", payload);
+
+
         return event;
     }
 

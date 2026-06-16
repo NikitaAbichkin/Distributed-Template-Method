@@ -7,7 +7,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 
 public interface OrderServiceInterface {
     public OrderCreatedEvent createOrder(OrderRequest request) throws JsonProcessingException;
-    public String deleteOrder(Long id);
-    public OrderCreatedEvent updateOrder(OrderUpdatingRequest orderRequest);
+    public String deleteOrder(Long id) throws JsonProcessingException;
+    public OrderCreatedEvent updateOrder(OrderUpdatingRequest orderRequest) throws JsonProcessingException;
     public OrderCreatedEvent GetOrder (Long id );
 }

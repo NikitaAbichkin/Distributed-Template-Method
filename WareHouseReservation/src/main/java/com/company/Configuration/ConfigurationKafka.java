@@ -31,7 +31,6 @@ public class ConfigurationKafka {
     public ConcurrentKafkaListenerContainerFactory<String,String> kafkaListenerContainerFactory(){
         ConcurrentKafkaListenerContainerFactory<String,String> factory = new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(consumerFactory());
-        factory.setRecordMessageConverter(new StringJsonMessageConverter());
         return  factory;
     }
 }

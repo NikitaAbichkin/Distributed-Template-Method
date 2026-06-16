@@ -8,10 +8,13 @@ import org.springframework.stereotype.Repository;
 import com.company.Model.WarehouseReservation;
 
 import java.util.Optional;
+import java.util.List;
+
 
 @Repository
 public interface WarehouseReservationRepository extends JpaRepository<WarehouseReservation, Long> {
     Optional<WarehouseReservation> findById(Long id);
     void deleteById(Long id);
+     Optional<WarehouseReservation> findByOrderId(Long orderId);
 
 }
